@@ -88,9 +88,13 @@ Além de escolher o sistema ideal de armazenamento de dados, devemos garantir qu
 - Alta: Bucketing e ordenação
 
 ## Particionamento
+Os dados serão separados em diversas pastas de acordo com as colunas utilizadas no particionamento. Se iremos particionar por mais de uma coluna, as pastas serão criadas pela ordem das colunas
+
 Uma analogia para o particionamento, seria em quebrar um grande bloco em bloco menores (partições), através por determinados atributos (colunas)
 
-É fundamental entender os dados antes de escolher as colunas que serão utilizadas para fazer o particionamento, pois a estrategia muda dependendo da cardinalidade da coluna:
+Com partições melhoramos a leitura e permite processamento paralelo eficiente
+
+É fundamental entender os dados antes de escolher as colunas que serão utilizadas para fazer o particionamento, pois a estrategia muda dependendo da cardinalidade das colunas:
 - Baixa ou média: Particionamento
 - Alta: Bucketing e ordenação
 
@@ -98,15 +102,28 @@ Uma analogia para o particionamento, seria em quebrar um grande bloco em bloco m
 
 Um ponto de partida para escolher as colunas de particionamento, é em utilizar as colunas que serão utilizadas em filtros (`where`) e agrupamentos (`groupBy`). Não é ideal, escolher colunas que possuem valores que são frequentemente alterados
 
-Os benefícios de utilizar partições são: 
-- Paralelismo mais eficiente
-- Acesso mais rápido dos dados
-
-**Ponto importante:** Devemos analisar se as participações estão sendo divididas corretamente ou se tivemos **skew** em algumas delas,  que irá comprometer os ganhos de performance
-
 As maneiras mais comuns de se realizar o particionamento são:
 - Particionamento horizontal / Sharding: Todas as partições irão possuir o mesmo schema
 - Particionamento vertical: Cada partição terá um subset das colunas
+
+Pontos de atenção:
+- A escolha errada das colunas podem gerar varias partições, resultando no problema de **small files**
+- Skew: Partições podem ficar desbalanceadas, perdendo efeito de otimização
+
+
+## Bucket
+Os dados serão separados em um número determinado de buckets de acordo com o hash de uma ou mais colunas. Diferente das partições, não cria uma pasta por valor, e sim um número fixo de arquivos
+
+Uma maneira de definir o número de buckets, podemos seguir os passos abaixo:
+- Pegar o tamanho do dataset (MB)
+- O número de cada bucket é de 128 até 200 MB
+- Achamos o número de buckets através do calculo: tamanho do dataset / 128 ~ 200
+
+Não podemos alterar o número de buckets, então:
+- Se usarmos os dados atuais para definir o número, no futuro podemos ter problemas, por falta de buckets
+- Se criarmos buckets a mais, não temos garantias se iremos usá-los da melhor maneira
+
+Além de colunas com alta cardinalidade, esta estratégia é ideal para otimizar joins (evita shuffle) e datasets com um número conhecido de divisões
 
 
 ## Indices

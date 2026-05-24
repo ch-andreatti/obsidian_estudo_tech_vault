@@ -47,10 +47,12 @@ Algumas de suas funções são as seguintes:
 
 Quando os recursos estão alocados, a comunicação é direta com os executores
 
+
 ## Spark session
 O **Spark session**, a partir da versão 2.0, foi criado para centralizar tudo em um único ponto de entrada (Operações e dados), tornando o desenvolvimento mais simples
 
 Ele substitui os objetos antigos como SQLContext, mas ainda é compatível com eles
+
 
 ## Cluster manager
 The cluster manager is responsible for managing and allocating resources for the
@@ -63,6 +65,7 @@ Os seguintes métodos de deploy estão disponíveis:
 - Apache Mesos
 - Kubernetes
 
+
 ## Spark executor
 A Spark executor, runs on each worker node in the cluster. The executors communi‐
 cate with the driver program and are responsible for executing tasks on the workers
@@ -71,11 +74,14 @@ In most deployments modes, only a single executor runs per node
 
 Cada executor roda dentro de uma **JVM**
 
+
 ## Spark job
 Driver converte a aplicação em **jobs**. Cada um deles será transformado em uma DAG, que será o plano de execução do Spark
 
+
 ## Spark stage
 Dentro do nó de cada **Job**, **Stages** são criadas para organizar quais tarefas serão executadas de maneira paralela e quais serão executadas de maneira sequencial
+
 
 ## Spark task
 Uma **Stage** é formada por diversas **Tasks**, menor unidade de execução no Spark, que são distribuídas entre os executores do cluster
@@ -85,20 +91,6 @@ Cada **Task** é mapeada para um core e trabalha com uma partição dos dados
 Ou seja, se um executor tem 16 núcleos, ele pode rodar 16 tasks em paralelo, cada uma cuidando de uma partição diferente
 
 ![[learning_spark_spark_tasks.png]]
-
-## Distribuição dos dados e partições
-Os dados são armazenados de maneira particionada dentro do cluster
-
-O Spark, lida com cada partição como um DataFrame na memoria. Para haver otimização no gasto de rede no cluster, cada executor carrega a partição que está mais próxima de sua localização
-
-Partições possibilitam um paralelismo mais eficiente. O Spark possui as seguintes estrategias de particionamento:
-- [[#partitionBy]]
-- [[#bucketBy]]
-
-### Hash partitions
-É uma forma de reorganizar os dados distribuídos com base em uma **função de hash aplicada à(s) coluna(s) de partição** com o objetivo de garantir que **linhas com o mesmo valor de chave** (ex: `user_id`) caiam **na mesma partição**.
-
-Essa técnica é crucial para operações distribuídas eficientes, como: `joins`, `groupBy`, `aggregations`, ...
 
 
 # Conceitos do Spark
@@ -115,11 +107,13 @@ São as etapas que o Apache Spark segue para transformar um código (em SQL ou D
 
 Essas instruções são transformadas em uma estrutura intermediária (AST – Abstract Syntax Tree).
 
+
 ### 2. Unresolved Logical Plan
 É um plano lógico inicial, mas ainda com referências não resolvidas:
 - O Spark ainda não sabe se as colunas e tabelas existem (ex: idade, pessoas)
 
 É como escrever um plano sem verificar se os dados realmente estão lá
+
 
 ### 3. Analysis (com o Catalog)
 Aqui o Spark consulta o catálogo (Hive Metastore, Delta Catalog, etc) para:
@@ -129,6 +123,7 @@ Aqui o Spark consulta o catálogo (Hive Metastore, Delta Catalog, etc) para:
 
 Saída será um **Logical Plan** resolvido
 
+
 ### 4. Logical Optimization
 Spark aplica regras de otimização lógica:
 - Predicate pushdown: move filtros para o início
@@ -136,6 +131,7 @@ Spark aplica regras de otimização lógica:
 - Projection pruning: remove colunas não utilizadas
 
 Saída será um **Optimized Logical Plan**
+
 
 ### 5. Physical Planning
 Gera várias alternativas físicas para executar o plano:
@@ -145,20 +141,24 @@ Gera várias alternativas físicas para executar o plano:
 
 Saída será uma lista de **Physical Plans**
 
+
 ### 6. Cost Model
 Spark usa um modelo de custo heurístico (como tamanho estimado de dados, cardinalidade, etc) para escolher a opção mais barata.
 
 Saída será **Selected Physical Plan**
+
 
 ### 7. Code Generation (WholeStageCodegen)
 Spark transforma o plano físico em código Java otimizado:
 - Isso vira bytecode para ser executado no JVM
 - Usa o conceito de RDDs internamente para paralelizar as tarefas
 
+
 ### 8. RDDs
 Finalmente, o plano vira tarefas distribuídas executadas como RDDs:
 - Cada etapa vira um Stage
 - Cada Stage é dividido em Tasks que são distribuídos no cluster
+
 
 ### Adaptive Query Execution (AQE)
 Recurso que **ajusta o plano físico de execução durante a execução da consulta**, com base em **estatísticas reais dos dados** (em vez de apenas estimativas feitas antes da execução). 
@@ -184,7 +184,9 @@ Pense no **AQE como um "replanejador de rota" no Waze**. Você definiu a rota an
 
 **Adaptive Physical Plan** é a etapa onde ocorre o **AQE** e é executada após a etapa de **Selected Physical Plan**
 
+
 ## Gerenciamento de memoria no Spark
+
 
 ## Shuffle
 É o processo de redistribuir dados entre diferentes partições, de forma que tarefas subsequentes possam operar com os dados corretamente agrupados ou ordenados
@@ -210,6 +212,7 @@ O **shuffle** acontece quando uma das seguintes operações é executada:
 - `sortBy()`
 
 Uma analogia para o **shuffle** é como misturar cartas de baralho entre jogadores para reorganizá-las por naipe. Cada jogador (executor) precisa enviar e receber cartas (dados), e isso leva tempo, memória e rede
+
 
 ## Transformations, Actions e Lazy Evaluation
 As operações realizadas nos das dados, podem ser classificadas em duas categorias:
@@ -237,10 +240,12 @@ Abaixo está um diagrama com **Transformations** e **Action**, que ativa o **Laz
 
 Toda **Action** cria um novo **job**
 
+
 ## Structured APIs
 Quando utilizamos as Structured APIs, estamos falando para o Spark "o que deve ser feito" e não "como deve ser feito"
 
 Isso porque o **Spark SQL engine** será responsável para gerar a query mais performática
+
 
 ## Data Spill
 **Data Spill** ocorre quando o Spark **não consegue manter todos os dados de uma operação intermediária (como `join`, `sort`, `groupBy`, etc.) inteiramente na memória RAM**. Quando isso acontece, o Spark escreve parte desses dados **temporariamente no disco** para continuar o processamento.
@@ -257,6 +262,7 @@ Existem os seguintes tipos de **spill:**
 - Sort spill: Durante ordenações que não cabem na memória
 - Aggregation spill: Durante reduceByKey, groupBy, agg, etc.
 - Join spill: Em joins grandes, principalmente sort-merge join
+
 
 ## Data Skew
 Problema gerado quando as partições estão desbalanceadas, o que faz com que uma partição leve muito mais tempo para ser processada do que as outras
@@ -298,39 +304,16 @@ Arquivos **parquet** já salvam o schema nos metadados
 ## Particionamento dos dados
 [[armazenamento_de_dados#Particionamento dos dados]]
 
+Os dados são armazenados de maneira particionada dentro do cluster
+
+O Spark, lida com cada partição como um DataFrame na memoria. Para haver otimização no gasto de rede no cluster, cada executor carrega a partição que está mais próxima de sua localização
+
 Podemos definir o tamanho das partições que o Spark irá ler com o comando: `spark.sql.files.maxPartitionBytes`
 
 Algumas estrategias de particionamento dos dados no Spark são:
+- `partitionBy`
+- `bucketBy`
 
-### partitionBy
-Os dados serão separados em diversas pastas de acordo com as colunas utilizadas no particionamento. Se iremos particionar por mais de uma coluna, as pastas serão criadas pela ordem das colunas
-
-`partitionBy` é ideal nas seguintes situações:
-- Filtros frequentes em queries: Reduz o scan de dados
-- Grandes volumes de dados: O particionamento melhora a leitura e permite processamento paralelo eficiente
-- Incrementos por chave de negócio: Se você recebe dados incrementais por uma chave específica (ex: data_ingestao, loja_id), particionar por essa chave evita regravar tudo
-
-`partitionBy` não é ideal nas seguintes situações:
-- Particionar por colunas com alta cardinalidade: [[#Small file problem]]
-- Se o dataset é pequeno e não há ganho significativo
-- Se as queries raramente filtram por essa coluna
-
-### bucketBy
-Os dados serão separados em um número determinado de buckets de acordo com o hash de uma ou mais colunas. Diferente de `partitionBy`, não cria uma pasta por valor, e sim um número fixo de arquivos (`numBuckets`)
-
-Para definir o número ótimo de buckets, podemos seguir os passos abaixo:
-- Pegar o tamanho do dataset (MB)
-- O número de cada bucket é de 128 até 200 MB
-- Achamos o número de buckets através do calculo: tamanho do dataset / 128 ~ 200
-
-`bucketBy` é ideal nas seguintes situações:
-- Colunas usadas em **joins frequentes**: Melhora performance evitando shuffle (quando tabelas têm mesmo `bucketBy` e número de buckets)
-- Dados com alta cardinalidade, onde `partitionBy` seria ineficiente
-- Cenários em que o número de buckets é fixo e definido previamente
-
-`bucketBy` não é ideal nas seguintes situações:
-- Os dados são muito dinâmicos e precisam de escrita incremental frequente
-- Não existe coluna natural de junção ou filtro que seja estável
 
 ## Shuffle partition Spark optimization
 Shuffle partition são as partições geradas após o shuffle
@@ -358,6 +341,7 @@ Para esse caso também podemos definir o tamanho da **shuffle partition** ideal,
 
 Caso a performance do job ainda esteja ruim após a definição do número de **shuffle partition**, os dados podem estar com o problema de [[#Data Skew]]
 
+
 ## Caching dos dados
 No Spark, possuímos duas funções para essa tarefa, **cache** e **persist**
 
@@ -382,6 +366,7 @@ De acordo com o total de memoria disponível entre os [[#Spark executor]], o mai
 
 Vale destacar que, as partições que não forem salvas, terão que ser reprocessadas
 
+
 ### DataFrame.persist()
 Possui o mesmo objetivo do **cache**, porém, disponibiliza maior controle sobre como e onde os dados serão salvos. Os métodos disponíveis para salvar os dados são:
 - MEMORY_ONLY
@@ -392,6 +377,7 @@ Possui o mesmo objetivo do **cache**, porém, disponibiliza maior controle sobre
 - MEMORY_AND_DISK_SER
 
 ![[ultimate_guide_to_apache_spark_performance_tuning_storage_level_types.png]]
+
 
 ## Spark joins
 O Spark tenta usar estratégias de join eficientes para minimizar o custo com [[#Shuffle]], essas são:
@@ -432,6 +418,7 @@ Ponto importante, se o broadcast automático estiver desativado `spark.sql.autoB
 
 O Spark nunca fará broadcast, e vai usar o Shuffle Sort Merge Join (SMJ) no lugar
 
+
 ### Shuffle Sort Merge Join
 É uma estratégia de join usada para unir dois grandes conjuntos de dados com base em uma chave comum. Esta chave deve ser:
 - Ordenável
@@ -453,6 +440,7 @@ Para o máximo beneficio deste join, devemos utilizá-lo mediante as seguintes c
 - Quando você deseja realizar apenas _equi-joins_ para combinar dois conjuntos de dados com base em chaves ordenadas e correspondentes
 - Quando você deseja evitar operações de _Exchange_ e _Sort_ para economizar grandes _shuffles_ na rede
 
+
 ## Salting
 Técnica para que visa solucionar problema de [[#Data Skew]]
 
@@ -468,6 +456,7 @@ No outro dataframe, preferencialmente o menor, criamos uma coluna que será um a
 **Observação:** explode é custoso e aumenta o dataframe
 
 Depois, fazemos o `join` pela coluna de chave e salt
+
 
 ### group by
 Criamos uma coluna com os valores de salt
