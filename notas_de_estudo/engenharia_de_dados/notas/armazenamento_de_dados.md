@@ -106,6 +106,8 @@ As maneiras mais comuns de se realizar o particionamento são:
 - Particionamento horizontal / Sharding: Todas as partições irão possuir o mesmo schema
 - Particionamento vertical: Cada partição terá um subset das colunas
 
+![arquivos_de_suporte/particionamento_horizontal_e_vertical.JPEG](../arquivos_de_suporte/particionamento_horizontal_e_vertical.JPEG)
+
 Pontos de atenção:
 - A escolha errada das colunas podem gerar varias partições, resultando no problema de **small files**
 - Skew: Partições podem ficar desbalanceadas, perdendo efeito de otimização

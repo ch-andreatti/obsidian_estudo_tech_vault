@@ -1,13 +1,30 @@
 # Parquet
 É um formato de armazenamento colunar open-source, criado pelo Twitter e Cloudera em 2013, amplamente adotado no ecossistema Hadoop/Spark e em soluções de Data Lake modernas. Suas principais características são:
+- Armazenamento hibrido de dados (linha e colunar)
+- Compreensão eficiente
+- Schema embutido (tipos de dados, nomes de colunas, metadados)
 - 
 
 ![arquivos_de_suporte/taxa_de_compactacao_do_parquet.png](../arquivos_de_suporte/taxa_de_compactacao_do_parquet.png)
 
-Um concorrente é o **Apache ORC** 
+Encodings Utilizados:
+- Plain
+- RLE (Run-Length Encoding)
+- RLE_DICTIONARY (Dictionary Encoding)
+- BIT_PACKING
+## Encoding - Run length encoding
 
-Casos de uso?
-Quando não é ideal usar?
+Compressão do tipo lossless
+
+Segundo o vídeo, essa é a mais importante
+
+Ordenação é crucial nesse aspecto
+Dados devem ser ordenados da menor cardinalidade para maior
+Fazemos ordenação na escrita
+
+Tipo de arquivo colunar, minimizamos colunas lidas
+Encoding, minimizamos quantidade de dados lidos
+Partição, minimizamos quantidade de linhas lidas
 
 
 # Delta Lake
