@@ -22,7 +22,7 @@ Os produtos devem ser desenvolvidos a fim de possuírem as seguintes caracterís
 - Confiável e possuir SLAs explícitos.
 
 ## Tipos de produtos
-![[produtos_de_dados_tipos_de_produtos.png]]
+![arquivos_de_suporte/exemplo_de_uml.png](../arquivos_de_suporte/produtos_de_dados_tipos_de_produtos.png)
 
 ### Foundational Data Products
 Possuem o objetivo de expor os dados do domínio de maneira reutilizável e governada sem grandes transformações. Seria as ingestões das fontes de dados até a camada **silver**.
