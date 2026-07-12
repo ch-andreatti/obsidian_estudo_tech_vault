@@ -48,7 +48,8 @@ Como mostrados acima, o ciclo possui as seguintes etapas:
 		- [[qualidade_de_dados]]
 	- DataOps
 	- [[arquitetura_de_dados]]
+		- [[produtos_de_dados]]
 	- Orquestração
 	- [[desenvolvimento_de_software]]
 
-Cada etapa tem uma papel crucial no ciclo, cada etapa terá sua página para detalhar melhor seu papel e objetivos
+
