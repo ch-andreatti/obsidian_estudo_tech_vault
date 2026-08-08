@@ -20,20 +20,17 @@ Antes de escolher como ingerir dados, é importante responder perguntas como:
 
 
 ## Tipos de ingestão
+**Analogia**: Imagine que você recebe contas para pagar. Comparando os modelos **Batch**, **Micro Batch** e **Streaming**, o pagamento seria da seguinte forma:
+- **Batch**: Você espera acumular todas as contas do mês e paga todas de uma vez;
+- **Micro Batch**: Você paga as contas em pequenos lotes, por exemplo, a cada hora;
+- **Streaming**: Você paga cada conta assim que a recebe, sem esperar acumular todas.
 
 ### Batch
-- É uma forma de lidar com dados contínuos em **"lotes" periódicos** (ex: 1 vez por dia).
-- Os lotes são criados com base em um **intervalo de tempo** ou quando o dado atinge um **tamanho específico**.
-- O modelo **batch é unidirecional**: uma vez que o dado vira lote, há uma latência fixa até ser processado.
-- Muito usado por causa das **limitações de sistemas legados**.
-- Continua sendo **popular para análises e machine learning**, onde a latência não é tão crítica.
+É uma forma de lidar com dados contínuos em **"lotes" periódicos** (ex: 1 vez por dia). Os lotes são criados com base em um **intervalo de tempo** ou quando o dado atinge um **tamanho específico**.
 
 
 ### Streaming
-- Quase todos os dados são, por natureza, **produzidos continuamente**.
-- Ingestão em streaming permite o **envio contínuo em tempo real** para outros sistemas (apps, bancos, ferramentas analíticas).
-- **Tempo real** significa que os dados chegam ao destino **pouco tempo após serem gerados** (ex: < 1 segundo).
-- A **latência aceitável** depende do contexto e das necessidades do sistema.
+É fazer o processamento de um dataset que não possui começo ou fim e está sendo gerado continuamente, em tempo real. Exemplos de streaming são: cliques em um site, transações financeiras, logs de erro, eventos de sensores, etc. **Tempo real** significa que os dados chegam ao destino **pouco tempo após serem gerados** (ex: < 1 segundo).
 
 
 ### Backfill
