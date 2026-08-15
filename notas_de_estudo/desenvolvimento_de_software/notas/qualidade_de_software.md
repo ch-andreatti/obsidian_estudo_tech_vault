@@ -25,6 +25,9 @@ Com os pontos a cima definidos, implementamos o teste da seguinte maneira:
 - Desenvolvimento e execução do teste 
 - Coleta do output
 - Comparação do output com o resultado esperado (**assertion**)
+- Reinicialização do ambiente, para não ocorrer interferência entre os testes
+
+Complementando, os testes possuem a seguinte anatomia: [Anatomy of a test](https://docs.pytest.org/en/stable/explanation/anatomy.html#test-anatomy)
 
 Uma boa maneira para começar a testar um componente é pelo teste vanila (caminho feliz), pela situação onde é esperado que o componente irá funcionar. Com o primeiro teste desenvolvido, podemos evoluir para os demais casos
 
@@ -84,10 +87,10 @@ project/
 ```
 
 
-## Pytest
+## pytest
 
 ### Geral
-- Podemos definir o diretorio que o `pytest` será executado com o comando `export PYTHONPATH=.`
+- Podemos definir o diretório que o `pytest` será executado com o comando `export PYTHONPATH=.`
 
 
 ### Invocação dos testes
@@ -99,8 +102,9 @@ Para a identificação e execução de um teste, o nome é importante. O `Pytest
 
 ### Execução do Pytest
 - `python -m pytest` ou `pytest`
-- `pytest -v`: Variação para mostrar mais informações
-- `pytest --collect-only`: Método para coletar os testes que serão executados, testes não serão executados
+- `pytest -v`: Variação para mostrar mais informações de log
+- `pytest --collect-only`: Coletar os testes que serão executados, testes não serão executados
+- `pytest --setup-show`:  Mostrar o setup que será executado nos testes
 
 
 ### Exemplo de teste unitário
@@ -159,6 +163,46 @@ class TestClass:
         assert hasattr(x, "check")
 ```
 
+
+### Fixtures
+Responsável pela etapa de preparação, onde o ambiente necessário para determinado teste é configurado, antes da execução dos teste. Algumas etapas são:
+- Definição dos inputs
+- Exclusão de estados anteriores, para não haver interferência entre os testes
+- ...
+
+Utilizando **pytest**, podemos aplicar fixtures da seguinte maneira: [About fixtures](https://docs.pytest.org/en/stable/explanation/fixtures.html)
+
+#### Setup e Teardown
+Estrategia para garantir que um teste não interfira no outro:
+- Setup: Etapa onde os inputs são definidos, esta etapa é executada antes dos testes
+- Teardown: Etapa onde o ambiente é reinicializado (Exclusão de arquivo, finalização da conexão com banco, ...), para o próximo teste não ser afetado com a execução do anterior. Esta etapa é executada após finalização do teste
+
+```Python
+import os
+import pytest
+
+@pytest.fixture
+def temp_file():
+	
+    # Setup: Create a temporary file
+    file_path = "temp_file.txt"
+    if not os.path.exists(file_path):
+        with open(file_path, "w") as f:
+            f.write("Hello, world!")
+    
+    yield file_path
+    
+    # Teardown: Remove the temporary file
+    os.remove(file_path)
+
+def test_temp_file_exists(temp_file):
+    assert os.path.exists(temp_file), "Temporary file should exist"
+```
+
+No pytest, utilizamos **yield** para habilitar a logica do **Teardown**
+
+Podemos alterar o comportamento de destruição da fixture, alterado o scope dela
+VER NA DOCUMENTAÇÃO COMO SÃO ESSES COMPORTAMENTOS
 
 ### Links úteis
 - [How to invoke pytest](https://docs.pytest.org/en/stable/how-to/usage.html)
