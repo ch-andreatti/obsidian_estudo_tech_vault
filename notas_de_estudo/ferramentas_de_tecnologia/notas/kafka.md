@@ -10,7 +10,7 @@
 
 
 # Introdução
-**Apache Kafka** é um sistema distribuído que possibilita a comunicação entre sistemas de maneira assíncrona, projetado para receber, armazenar e distribuir grandes volumes de dados em tempo real, de forma confiável e escalável.
+**Apache Kafka** é um sistema distribuído que possibilita a comunicação entre sistemas de maneira assíncrona, projetado para receber, armazenar e distribuir grandes volumes de dados em tempo real, de forma confiável e escalável. **Kafka** auxilia em desacoplar o fluxo de dados entre sistemas.
 
 **Analogia**: Imagine um sistema de correios dentro de uma empresa, onde vários departamentos precisam trocar informações o tempo todo:
 - Em vez de cada departamento ligar diretamente para o outro, o que vira um caos conforme a empresa cresce, todos enviam e recebem mensagens por uma **central**;
@@ -56,3 +56,4 @@
 
 ## Estrutura dos eventos
 ![[kafka_message_anatomy.png]]
+
