@@ -52,6 +52,11 @@ def test_initial_editor_is_empty():
 ```
 
 
+## Mocking
+Em alguns testes, podemos lidar  com alguns recursos que não é interessante a interação, como por exemplo a conexão com um banco de dados ou uma API. Nesses casos, podemos fazer o mocking, para simular a interação com esses recursos
+
+A seguinte seção, mostra como fazer o mocking utilizando o **pytest**: [[#Mocking Pytest]]
+
 # Tipos de testes
 
 ## Teste unitário
@@ -87,27 +92,28 @@ project/
 ```
 
 
-## pytest
+# pytest
 
-### Geral
+
+# Geral
 - Podemos definir o diretório que o `pytest` será executado com o comando `export PYTHONPATH=.`
 
-
-### Invocação dos testes
+## Invocação dos testes
 Para a identificação e execução de um teste, o nome é importante. O `Pytest` invoca os testes que seguem os padrões abaixo:
 - Módulos: `test_*.py` ou `*_test.py`
 - Função e métodos: `test_...`
 - Classe: `Test...`
 
 
-### Execução do Pytest
+## Modelos de execução do pytest
 - `python -m pytest` ou `pytest`
 - `pytest -v`: Variação para mostrar mais informações de log
 - `pytest --collect-only`: Coletar os testes que serão executados, testes não serão executados
 - `pytest --setup-show`:  Mostrar o setup que será executado nos testes
+- `pytest --fixtures-per-test`: Listar as fixtures que cada arquivo está utilizando
 
 
-### Exemplo de teste unitário
+## Exemplo de teste unitário
 **src/math.py**
 
 ```Python
@@ -164,15 +170,20 @@ class TestClass:
 ```
 
 
-### Fixtures
-Responsável pela etapa de preparação, onde o ambiente necessário para determinado teste é configurado, antes da execução dos teste. Algumas etapas são:
+# Fixtures
+Responsável pela etapa de preparação, onde é configurado o ambiente necessário para determinado teste, antes da execução. Algumas etapas são:
 - Definição dos inputs
 - Exclusão de estados anteriores, para não haver interferência entre os testes
 - ...
 
-Utilizando **pytest**, podemos aplicar fixtures da seguinte maneira: [About fixtures](https://docs.pytest.org/en/stable/explanation/fixtures.html)
+Utilizando **pytest**, podemos utilizar fixtures da seguinte maneira: 
+- [About fixtures](https://docs.pytest.org/en/stable/explanation/fixtures.html)
+- [Fixtures reference](https://docs.pytest.org/en/stable/reference/fixtures.html#fixture-availability)
+- [How to use fixtures](https://docs.pytest.org/en/stable/how-to/fixtures.html#fixture-scopes)
 
-#### Setup e Teardown
+Um ponto importante é definir corretamente o **scope** da fixture, que será responsável pelo seu ciclo de vida.
+
+## Setup e Teardown
 Estrategia para garantir que um teste não interfira no outro:
 - Setup: Etapa onde os inputs são definidos, esta etapa é executada antes dos testes
 - Teardown: Etapa onde o ambiente é reinicializado (Exclusão de arquivo, finalização da conexão com banco, ...), para o próximo teste não ser afetado com a execução do anterior. Esta etapa é executada após finalização do teste
@@ -201,9 +212,19 @@ def test_temp_file_exists(temp_file):
 
 No pytest, utilizamos **yield** para habilitar a logica do **Teardown**
 
-Podemos alterar o comportamento de destruição da fixture, alterado o scope dela
-VER NA DOCUMENTAÇÃO COMO SÃO ESSES COMPORTAMENTOS
 
-### Links úteis
+## conftest
+Recurso onde podemos centralizar as fixtures em um arquivo `conftest.py` e reaproveitar elas em diversos testes. Não é necessário fazer o import das fixtures, o pytest consegue descobrir elas automaticamente
+
+Vale ressaltar que o arquivo `conftest.py` deve estar no mesmo nível ou a cima, dos arquivos de teste
+
+# Mocking Pytest
+Utilizando **pytest**, podemos fazer mocking da seguinte maneira: 
+- [How to monkeypatch/mock modules and environments](https://docs.pytest.org/en/stable/how-to/monkeypatch.html#how-to-monkeypatch-mock-modules-and-environments)
+- [monkeypatch](https://docs.pytest.org/en/stable/reference/reference.html#pytest.MonkeyPatch)
+
+## Links úteis
 - [How to invoke pytest](https://docs.pytest.org/en/stable/how-to/usage.html)
 - [How to write and report assertions in tests](https://docs.pytest.org/en/stable/how-to/assert.html#assertraises)
+
+TIRAR ESSA SEÇÃO
