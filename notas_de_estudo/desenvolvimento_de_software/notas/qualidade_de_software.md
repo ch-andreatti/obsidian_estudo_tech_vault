@@ -110,7 +110,8 @@ Para a identificação e execução de um teste, o nome é importante. O `Pytest
 - `pytest -v`: Variação para mostrar mais informações de log
 - `pytest --collect-only`: Coletar os testes que serão executados, testes não serão executados
 - `pytest --setup-show`:  Mostrar o setup que será executado nos testes
-- `pytest --fixtures-per-test`: Listar as fixtures que cada arquivo está utilizando
+- `pytest --fixtures`: Listar as fixtures definidas
+- `pytest --fixtures-per-test`: Listar as fixtures definidas por teste
 
 
 ## Exemplo de teste unitário
@@ -176,12 +177,14 @@ Responsável pela etapa de preparação, onde é configurado o ambiente necessá
 - Exclusão de estados anteriores, para não haver interferência entre os testes
 - ...
 
+Em resumo, fixtures são os inputs que serão utilizados em múltiplos testes
+
 Utilizando **pytest**, podemos utilizar fixtures da seguinte maneira: 
 - [About fixtures](https://docs.pytest.org/en/stable/explanation/fixtures.html)
 - [Fixtures reference](https://docs.pytest.org/en/stable/reference/fixtures.html#fixture-availability)
 - [How to use fixtures](https://docs.pytest.org/en/stable/how-to/fixtures.html#fixture-scopes)
 
-Um ponto importante é definir corretamente o **scope** da fixture, que será responsável pelo seu ciclo de vida.
+Um ponto importante é definir corretamente o **scope** da fixture, que será responsável pelo seu ciclo de vida
 
 ## Setup e Teardown
 Estrategia para garantir que um teste não interfira no outro:
