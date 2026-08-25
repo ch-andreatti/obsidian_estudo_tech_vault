@@ -25,7 +25,7 @@ Com os pontos a cima definidos, implementamos o teste da seguinte maneira:
 - Desenvolvimento e execução do teste 
 - Coleta do output
 - Comparação do output com o resultado esperado (**assertion**)
-- Reinicialização do ambiente, para não ocorrer interferência entre os testes
+- Reinicialização e limpeza do ambiente, para não ocorrer interferência com os próximos testes
 
 Complementando, os testes possuem a seguinte anatomia: [Anatomy of a test](https://docs.pytest.org/en/stable/explanation/anatomy.html#test-anatomy)
 
@@ -34,7 +34,7 @@ Uma boa maneira para começar a testar um componente é pelo teste vanila (camin
 **Ponto importante**: Os testes devem ser reproduzíveis, ou seja, devemos obter o mesmo resultado de um teste quando utilizados os mesmos inputs
 
 ## Given When Then
-Maneira de estruturar os testes:
+Estruturação dos testes de maneira modular, múltiplos cenários não devem estar agrupados no mesmo teste. Proposta de estruturação dos testes:
 - Given: Definir os inputs
 - When: Executar a ação que está sendo validada
 - Then: Validar se o comportamento foi o esperado
@@ -56,6 +56,7 @@ def test_initial_editor_is_empty():
 Em alguns testes, podemos lidar  com alguns recursos que não é interessante a interação, como por exemplo a conexão com um banco de dados ou uma API. Nesses casos, podemos fazer o mocking, para simular a interação com esses recursos
 
 A seguinte seção, mostra como fazer o mocking utilizando o **pytest**: [[#Mocking Pytest]]
+
 
 # Tipos de testes
 
@@ -220,6 +221,42 @@ No pytest, utilizamos **yield** para habilitar a logica do **Teardown**
 Recurso onde podemos centralizar as fixtures em um arquivo `conftest.py` e reaproveitar elas em diversos testes. Não é necessário fazer o import das fixtures, o pytest consegue descobrir elas automaticamente
 
 Vale ressaltar que o arquivo `conftest.py` deve estar no mesmo nível ou a cima, dos arquivos de teste
+
+
+# Parametrization
+Tem como objetivo em possibilitar a execução do mesmo teste múltiplas vezes, utilizando diferentes inputs. Dessa maneira conseguimos cobrir diversos casos, sem ter que replicar os testes
+
+## Parametrização de teste
+**src/math.py**
+
+```Python
+def diff_two_numbers(a: int, b: int) -> int:
+    return a - b
+```
+
+**test/test_math.py**
+
+```Python
+from src.math import diff_two_numbers
+import pytest
+
+@pytest.mark.parametrize(
+    "a, b, expected", 
+    [
+        (5, 3, 2),
+        (3, 5, -2),
+        (0, 0, 0),
+        (-1, -1, 0)
+    ]
+)
+def test_multiple_diff_two_numbers(a, b, expected):
+    assert diff_two_numbers(a, b) == expected
+```
+
+Também conseguimos fazer a **parametrização de fixtures**
+
+Para mais informações, ver a documentação oficial: [How to parametrize fixtures and test functions](https://docs.pytest.org/en/stable/how-to/parametrize.html)
+
 
 # Mocking Pytest
 Utilizando **pytest**, podemos fazer mocking da seguinte maneira: 
