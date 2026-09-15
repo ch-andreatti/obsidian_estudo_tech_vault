@@ -13,3 +13,14 @@ Um DP é um molde/gabarito, que pode ser utilizado para resolver um problema que
 - Criacionais: Encapsulam a criação instanciação de objetos. Ajudam a tonar um sistema independente de como seus objetos são criados, compostos e representados
 - Estruturais: Definem como classes e objetos são compostos para formar estruturas maiores
 - Comportamentais: Definem algoritmos e atribuição de responsabilidades entre objetos. Além de definir classes e objetos, também definem os padrões de comunicação entre eles. Foca no comportamento de cada classe ou objeto em relação aos demais
+# Comportamentais
+
+## Strategy
+
+Exemplo de pagamentos: Cartão de crédito, Cartão de debito, Pix, Dinheiro, ...
+Cada método de pagamento vai virar uma classe e o DP Strategy vai encapsular elas
+Os clientes vão bater na classe Strategy que vai direcionar para o pagamento apropriado
+
+Deve ser util no Addepar
+
+Este DP é um gateway de classes
